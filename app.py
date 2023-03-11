@@ -6,7 +6,7 @@ import json
 
 # Connect to mariadb
 mariadb_konexioa = mariadb.connect(host="db", user='user', password='pass', database='Proba') #Konexioa sortu, beharrezko host,erabiltzaile,pasahitz eta datubaseren izena pasatuz parametro bezala
-cursor = mariadb_konexioa.cursor()#Kontsultak egiteko beharrezkoa izango den kurtsorea sortu
+cursor = mariadb_konexioa.cursor() #Kontsultak egiteko beharrezkoa izango den kurtsorea sortu
 app = Flask(__name__) #Flask instantzia sortu
 
 @app.route("/db") #Adminer kontainerrera joateko eskaeraren ruta
