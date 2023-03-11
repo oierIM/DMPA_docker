@@ -1,0 +1,43 @@
+services:
+  web:
+    build: .
+    deploy:
+      mode: replicated
+      replicas: 3
+    depends_on:
+          - db
+# --- database - 'mariadb' ---
+  db:
+    image: mariadb
+    ports:
+        - "3306:3306"
+    expose:
+        - '3306'
+    command: --init-file /var/lib/mysql/proba.sql
+    volumes:
+        - ./dbdata:/var/lib/mysql
+        - ./proba.sql:/var/lib/mysql/proba.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: Proba
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+
+# --- server - 'nginx' ---
+  nginx:
+    image: nginx:1.23.3
+    container_name: my-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+      - adminer
+# --- database environment - 'adminer' ---
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
