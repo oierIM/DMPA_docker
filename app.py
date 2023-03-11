@@ -5,30 +5,27 @@ import socket
 import json
 
 # Connect to mariadb
-mariadb_conexion = mariadb.connect(host="db",
-                         user='user',
-                         password='pass',
-                         database='Proba')
-cursor = mariadb_conexion.cursor()
-app = Flask(__name__)
+mariadb_konexioa = mariadb.connect(host="db", user='user', password='pass', database='Proba') #Konexioa sortu, beharrezko host,erabiltzaile,pasahitz eta datubaseren izena pasatuz parametro bezala
+cursor = mariadb_konexioa.cursor()#Kontsultak egiteko beharrezkoa izango den kurtsorea sortu
+app = Flask(__name__) #Flask instantzia sortu
 
-@app.route("/db")
+@app.route("/db") #Adminer kontainerrera joateko eskaeraren ruta
 def db():
-	pass #magia
+	pass #nginx konfigurazio fitxategian berbideratzen du adminerrera iada
 
-@app.route("/message", methods=['GET', 'POST'])
+@app.route("/message", methods=['GET', 'POST']) #Bi metodo posible dituen message ruta, get eta post 
 def message():
-	if request.method == 'GET':
-		cursor.execute("SELECT * FROM Informazioa")
-		return cursor.fetchall()
-	elif request.method == 'POST':
-		eskaera = request.json
-		Id = socket.gethostname()
-		cursor.execute(f"INSERT INTO Informazioa (From_eskaera, Content_eskaera, Id) VALUES (%s, %s, %s)",(eskaera['From'],eskaera['Content'], Id))
-		cursor.execute("commit")
+	if request.method == 'GET': #Datu basearen erregistro guztiak bueltatu
+		cursor.execute("SELECT * FROM Informazioa") #Beharrezko taularen gainean eskaera exekutatu
+		return cursor.fetchall() #Lortutako emaitzak bueltatzeko beharrezko komandoa
+	elif request.method == 'POST': #Eskaeraren edukia datu basean gordeko du. Json formatuan egongo da edukia
+		eskaera = request.json #eskaeraren edukia gordetzen dugu
+		Id = socket.gethostname() #Uneko flask kontainerraren id-a lortu
+		cursor.execute(f"INSERT INTO Informazioa (From_eskaera, Content_eskaera, Id) VALUES (%s, %s, %s)",(eskaera['From'],eskaera['Content'], Id)) #Datu basean eskaerako From, Content eta kontainerraren id-a gordeko dugu tupla batean
+		cursor.execute("commit") #Aldaketak burutu
 		return 0
 
-@app.route("/test", methods=['GET'])
+@app.route("/test", methods=['GET']) #Test rutako eskaerak ALIVE testua bueltatuko digu, bere flask kontainerraren id-arekin batera
 def test():
 	return "ALIVE "+ socket.gethostname() #bueltatu alive eta kontainerraren id-a
 
