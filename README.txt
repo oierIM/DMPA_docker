@@ -1,3 +1,12 @@
+*****************************GARRANTZITSUA*********************************************************************
+
+compose docker up egiten den lehenengo aldian, arazo bat emango du db-a ongi sortu ez delako
+
+HAU KONPONTZEKO NAHIKOA DA COMPOSE DOWN EGITEA ETA BERRIZ ERE DOCKER BUILD ETA DOCKER COMPOSE UP EGITEA, HORTIK
+AURRERAKO docker compose up GUZTIAK EGOKI FUNTZIONATUKO DUTE, LEHENENGO EXEKUZIOAN SOILIK EMATEN DU ARAZOA
+
+****************************************************************************************************************
+
 Ezer baino lehen, honakoa egin Kontainer eta Networkak gelditu eta ezabatzeko:
 
 > docker compose down
